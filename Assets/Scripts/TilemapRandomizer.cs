@@ -57,6 +57,12 @@ public class TilemapRandomizer
                 if (IsOutOfBounds(newPos, minBounds, maxBounds))
                     continue;
 
+                //If new tile is not in the closed list, add it to the queue
+                if (!closedList.Contains(newPos))
+                {
+                    openList.Enqueue(newPos);
+                }
+
                 var tile = tilemap.GetTile(newPos);
 
                 if (tile == null)
@@ -86,20 +92,34 @@ public class TilemapRandomizer
                     if (consideredTiles.ContainsKey(tileProb.Key))
                         consideredTiles[tileProb.Key] = 0.0f;
 
+                    //TODO: How to handle empty tiles
                     consideredTiles[tileProb.Key] += tileProb.Value;
-                }
-
-                //If new tile is not in the closed list, add it to the queue
-                if(!closedList.Contains(newPos))
-                {
-                    openList.Enqueue(newPos);
                 }
             }
 
-            //TODO:
-            //If considered tiles is empty, use a random tile.
-            //Otherwise, pick from the weighted dist
-            //place tile
+            var tileKey = string.Empty;
+            if( consideredTiles.Count <= 0)
+            {
+                var randIdx = Random.Range(0, tileProbabilities.Keys.Count);
+                tileKey = tileProbabilities.Keys.ToList()[randIdx];
+            }
+            else
+            {
+                //TODO: how to handle empty tiles?
+                //TODO: Get weighted probability
+                var randIdx = Random.Range(0, consideredTiles.Count);
+                tileKey = consideredTiles.Keys.ToList()[randIdx];
+            }
+
+            if (string.IsNullOrEmpty(tileKey) || !allTiles.ContainsKey(tileKey))
+                continue;
+
+            var finalTile = allTiles[tileKey];
+
+            if (finalTile == null)
+                continue;
+
+            tilemap.SetTile(currentPos, finalTile);
         }
 
     }
