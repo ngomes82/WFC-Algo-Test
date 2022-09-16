@@ -60,6 +60,7 @@ public class TilemapRandomizer
                 //If new tile is not in the closed list, add it to the queue
                 if (!closedList.Contains(newPos))
                 {
+                    closedList.Add(newPos);
                     openList.Enqueue(newPos);
                 }
 
