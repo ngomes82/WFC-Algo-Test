@@ -89,7 +89,7 @@ public class TilemapRandomizer
 
                 foreach(var tileProb in tileProbabilities[tile.name][dirKey])
                 {
-                    if (consideredTiles.ContainsKey(tileProb.Key))
+                    if (!consideredTiles.ContainsKey(tileProb.Key))
                         consideredTiles[tileProb.Key] = 0.0f;
 
                     //TODO: How to handle empty tiles
